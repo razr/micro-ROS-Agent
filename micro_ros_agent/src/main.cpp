@@ -5,33 +5,22 @@
 
 #include "graph_manager.hpp"
 
-graphmanager::GraphManager * gm;
+GraphManager::GraphManager * gm;
 
-void printGUID(const dds::GUID_t& guid) {
-    std::cout <<  "GUID:\n\t entityId.entityKind: " << (int) guid.entityId().entityKind() << "\n";
-    std::cout <<  "\t entityId.m_entityKey: ";
 
-    for (size_t i = 0; i < 3; i++){
-        std::cout << (int) guid.entityId().entityKey()[i] << " ";
+void on_create_callback(const dds::xrce::ObjectKind& kind, const eprosima::fastrtps::rtps::GUID_t& guid, void* data) {
+    std::cout <<  "ObjectKind: " <<(int) kind << "\n";
+    if (kind == dds::xrce::OBJK_PARTICIPANT){
+        gm->add_participant(guid, data);
+    }else if(kind == dds::xrce::OBJK_DATAWRITER){
+        gm->add_datawriter(guid, data);
     }
-
-    std::cout <<  "\n\t guidPrefix: ";
-
-    for (size_t i = 0; i < 12; i++){
-        std::cout << (int) guid.guidPrefix()[i] << " ";
-    }
-    std::cout <<  "\n";
-}
-
-void on_create_callback(const dds::xrce::ObjectKind& kind, const dds::GUID_t& guid) {
-  std::cout <<  "ObjectKind: " <<(int) kind << "\n";
-  gm->add_participant(guid);
-  printGUID(guid);
+  
 }
 
 int main(int argc, char** argv)
 {   
-    gm = new graphmanager::GraphManager();
+    gm = new GraphManager::GraphManager();
 
     eprosima::uxr::UDPv4Agent agent_udp4(8888, eprosima::uxr::Middleware::Kind::FASTDDS);
     agent_udp4.set_verbose_level(2);
