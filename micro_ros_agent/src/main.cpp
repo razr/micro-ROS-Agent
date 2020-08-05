@@ -8,12 +8,14 @@
 GraphManager::GraphManager * gm;
 
 
-void on_create_callback(const dds::xrce::ObjectKind& kind, const eprosima::fastrtps::rtps::GUID_t& guid, void* data) {
+void on_create_callback(const dds::xrce::ObjectKind& kind, const eprosima::fastrtps::rtps::GUID_t& guid, (void*) participant) {
     std::cout <<  "ObjectKind: " <<(int) kind << "\n";
     if (kind == dds::xrce::OBJK_PARTICIPANT){
-        gm->add_participant(guid, data);
+        gm->add_participant(guid, participant);
     }else if(kind == dds::xrce::OBJK_DATAWRITER){
-        gm->add_datawriter(guid, data);
+        gm->associate_entity(guid, participant, false);
+    }else if(kind == dds::xrce::OBJK_DATAREADER){
+        gm->associate_entity(guid, participant, true);
     }
   
 }
