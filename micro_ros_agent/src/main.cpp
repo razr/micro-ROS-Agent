@@ -8,7 +8,7 @@
 GraphManager::GraphManager * gm;
 
 
-void on_create_callback(const dds::xrce::ObjectKind& kind, const eprosima::fastrtps::rtps::GUID_t& guid, (void*) participant) {
+void on_create_callback(const dds::xrce::ObjectKind& kind, const eprosima::fastrtps::rtps::GUID_t& guid, void* participant) {
     std::cout <<  "ObjectKind: " <<(int) kind << "\n";
     if (kind == dds::xrce::OBJK_PARTICIPANT){
         gm->add_participant(guid, participant);
